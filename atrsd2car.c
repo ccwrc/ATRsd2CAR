@@ -31,7 +31,7 @@ U8 loadATR(const char *filename, U8 *data)
 	FILE *pf;
 	pf=fopen(filename,"rb");
 	if (pf)
-    {
+    	{
 		i=fread(header,sizeof(U8),16,pf);
 		if (i==16)
 		{
@@ -78,7 +78,7 @@ U8 saveCAR(const char *filename, U8 *data, unsigned int sum)
 	header[11]=(sum&0xFF);
 	pf=fopen(filename,"wb");
 	if (pf)
-    {
+    	{
 		i=fwrite(header,sizeof(U8),16,pf);
 		if (i==16)
 		{
@@ -200,21 +200,21 @@ int main( int argc, char* argv[] )
 {	
 	printf("ATRsd2CAR - ver: %s\n",__DATE__);
 	if (argc==3)
-    {
+    	{
 		atrsd2car(argv[1],argv[2],0);
-    }
-    else if (argc==4)
-    {
+    	}
+    	else if (argc==4)
+    	{
 		char *ptr;
 		ptr=argv[3];
 		U8 mode=ptr[1];
 		atrsd2car(argv[1],argv[2],mode);
-    }
-    else
-    {
+    	}
+    	else
+    	{
 		printf("(c) GienekP\n");
 		printf("use:\natrsd2car game.atr game.car [-c]\n");
-    };
+    	};
     return 0;
 }
 /*--------------------------------------------------------------------*/
