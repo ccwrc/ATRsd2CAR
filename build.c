@@ -4,10 +4,10 @@
 int main(void)
 {
 	unsigned int i,j;
-    FILE *fi,*fo;
-    fi=fopen("starter.bin","rb");
-    if (fi)
-    {
+    	FILE *fi,*fo;
+    	fi=fopen("starter.bin","rb");
+   	if (fi)
+    	{
 		fo=fopen("starter.h","w");
 		if (fo)
 		{
