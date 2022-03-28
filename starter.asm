@@ -273,7 +273,7 @@ SRTCPY
 .local DSKINT_new,$C6B3
 
 		nop
-		nop				; ONLY TRIM TO $C739
+		nop			; ONLY TRIM TO $C739
 		nop
 		lda DCMND
 		cmp #$52
