@@ -55,12 +55,12 @@ JSIOINT = $E459
 ;-----------------------------------------------------------------------		
 ; INITCART ROUTINE
 
-INIT	rts
+INIT		rts
 	
 ;-----------------------------------------------------------------------		
 ; CARTRUN ROUTINE
 	
-BEGIN	jsr IRQDIS
+BEGIN		jsr IRQDIS
 		jsr ROM2RAM
 		jsr SETRAM
 		jsr OVRDINT
@@ -71,7 +71,7 @@ BEGIN	jsr IRQDIS
 ;-----------------------------------------------------------------------		
 ; IRQ ENABLE
 
-IRQENB	lda #$40
+IRQENB		lda #$40
 		sta NMIEN
 		lda #$F7
 		sta IRQST
@@ -83,7 +83,7 @@ IRQENB	lda #$40
 ;-----------------------------------------------------------------------		
 ; IRQ DISABLE
 
-IRQDIS	sei	
+IRQDIS		sei	
 		lda #$00
 		sta DMACTL
 		sta NMIEN
@@ -94,7 +94,7 @@ IRQDIS	sei
 ;-----------------------------------------------------------------------		
 ; COPY ROM TO RAM
 	
-ROM2RAM	lda #$C0
+ROM2RAM		lda #$C0
 		sta TMP+1
 		ldy #$00
 		sty TMP
@@ -125,7 +125,7 @@ T1		cmp #$00
 ;-----------------------------------------------------------------------		
 ; SET RAM & DISABLE BASIC
 
-SETRAM	lda PORTB
+SETRAM		lda PORTB
 		and #$FE
 		ora #$02
 		sta PORTB
@@ -135,7 +135,7 @@ SETRAM	lda PORTB
 ;-----------------------------------------------------------------------		
 ; COPY NEW DSKINT PROCEDURE
 
-OVRDINT	lda #<SRTCPY
+OVRDINT		lda #<SRTCPY
 		sta TMP
 		lda #>SRTCPY
 		sta TMP+1
@@ -145,7 +145,7 @@ OVRDINT	lda #<SRTCPY
 		sta TMP+3
 			
 		ldy #ENDCPY-SRTCPY-1
-LPCPY	lda (TMP),Y
+LPCPY		lda (TMP),Y
 		sta (TMP+2),Y
 		dey
 		bne LPCPY
@@ -157,7 +157,7 @@ LPCPY	lda (TMP),Y
 		;lda #$01
 		;sta JDSKINT+2
 		
-		lda RESETWM+2	; don't test cart exchange RESET
+		lda RESETWM+2		; don't test cart exchange RESET
 		sta RESETWM+5
 		lda RESETWM+3
 		sta RESETWM+6
@@ -171,7 +171,7 @@ LPCPY	lda (TMP),Y
 ;-----------------------------------------------------------------------		
 ; COPY TO ZEROPAGE FOR "KILLERS" PORTB
 
-RESERVE	lda #<ZEROCP
+RESERVE		lda #<ZEROCP
 		sta TMP
 		lda #>ZEROCP
 		sta TMP+1
@@ -181,7 +181,7 @@ RESERVE	lda #<ZEROCP
 		sta TMP+3
 			
 		ldy #ZEROEND-ZEROCP-1
-RESCPY	lda (TMP),Y
+RESCPY		lda (TMP),Y
 		sta (TMP+2),Y
 		dey
 		bne RESCPY
@@ -192,7 +192,7 @@ RESCPY	lda (TMP),Y
 ;-----------------------------------------------------------------------		
 ; LEAVE CART SPACE
 		
-BYEBYE	lda #$1F
+BYEBYE		lda #$1F
 		sta MEMTOP
 		lda #$BC
 		sta MEMTOP+1
@@ -204,14 +204,14 @@ BYEBYE	lda #$1F
 ;-----------------------------------------------------------------------		
 ; OLD DiSK INTerface
 
-DSKINTO	lda #$31
+DSKINTO		lda #$31
 		sta DDEVIC
 		lda DSKTIM
 		ldx DCMND
 		cpx #$21
 		beq STM
 		lda #$07
-STM 	sta DTIMLO
+STM 		sta DTIMLO
 		ldx #$40
 		lda DCMND
 		cmp #$50
@@ -219,7 +219,7 @@ STM 	sta DTIMLO
 		cmp #$57
 		bne READ
 WRT		ldx #$80
-READ	cmp #$53
+READ		cmp #$53
 		bne DSL
 		lda #<DVSTAT
 		sta DBUFA
@@ -243,14 +243,14 @@ SUC		lda DCMND
 		ldy #$02
 		lda (BUFADR),Y
 		sta DSKTIM
-FRMT	lda DCMND
+FRMT		lda DCMND
 		CMP #$21
 		BNE EXIT
 		jsr PUTADR
 		ldy #$FE
-LOOP1	iny
+LOOP1		iny
 		iny
-LOOP2	lda (BUFADR),Y
+LOOP2		lda (BUFADR),Y
 		cmp #$FF
 		bne LOOP1
 		iny
@@ -263,7 +263,7 @@ LOOP2	lda (BUFADR),Y
 		sty DBYT
 		lda #$00
 		sta DBYT+1
-EXIT	ldy DSTATS
+EXIT		ldy DSTATS
 		rts
 		
 ;-----------------------------------------------------------------------		
@@ -272,33 +272,26 @@ EXIT	ldy DSTATS
 SRTCPY
 .local DSKINT_new,$C6B3
 
-;		jmp $0100
 		nop
 		nop				; ONLY TRIM TO $C739
 		nop
 		lda DCMND
 		cmp #$52
 		beq SECREAD
-;		lda #$00
-;		sta $D500		
-;		jsr DSKINTO		; NO SPACE FOR THIS CODE :/
-;		lda #$FF
-;		sta $D500
 		clc
-;		bcc FINISH
 		bcc STATOK
 ;.......................................................................		
-SECREAD	lda DAUX1
+SECREAD		lda DAUX1
 		cmp #$00
 		bne NOCORR1
 		dec DAUX2
-NOCORR1	dec DAUX1
+NOCORR1		dec DAUX1
 		lda	DAUX1
 		and #$01
 		cmp #$01
 		bne NOHALF
 		lda #$80
-NOHALF	sta TMP
+NOHALF		sta TMP
 		lda DAUX1
 		lsr
 		and #$1F
@@ -323,17 +316,17 @@ NOHALF	sta TMP
 		cmp #$FF
 		bne NOCORR2
 		inc DAUX2
-NOCORR2 inc DAUX1				
+NOCORR2 	inc DAUX1				
 		lda DBUFA
 		sta TMP+2
 		lda DBUFA+1
 		sta TMP+3
 ;.......................................................................				
-LOOP	lda VCOUNT
+LOOP		lda VCOUNT
 		cmp #$82
 		bne LOOP		
 		ldy #$00
-CPYSECT ldx TMP+4
+CPYSECT 	ldx TMP+4
 		stx $D500
 		lda (TMP),Y
 		ldx #$FF
@@ -342,10 +335,10 @@ CPYSECT ldx TMP+4
 		iny
 		cpy #$80
 		bne CPYSECT
-STATOK	ldy #$01
+STATOK		ldy #$01
 		sty DSTATS
 		
-FINISH	lda TRIG3
+FINISH		lda TRIG3
 		sta GINTLK
 		rts
 
@@ -357,13 +350,13 @@ ENDCPY	; --->>> $C739
 ; RELOC CODE FOR $0100
 
 ZEROCP		
-ZLOOP	lda VCOUNT
+ZLOOP		lda VCOUNT
 		cmp #$82
 		bne ZLOOP		
 		ldy #$00
 		sty $D500
 		jmp AROUND
-CATCH	ldx TMP+4	; $010F
+CATCH		ldx TMP+4	; $010F
 		stx $D500
 		lda (TMP),Y
 		ldx #$FF
@@ -375,7 +368,7 @@ CATCH	ldx TMP+4	; $010F
 		ldy #$01
 		sty DSTATS	
 				
-BACK	lda #$FF	; $0127
+BACK		lda #$FF	; $0127
 		sta $D500
 		lda TRIG3
 		sta GINTLK
@@ -391,7 +384,7 @@ BACK	lda #$FF	; $0127
 		clc
 		bne BACK
 		
-GOBOOT	lda #$FF	; $013E
+GOBOOT		lda #$FF	; $013E
 		sta $D500
 		lda TRIG3
 		sta GINTLK
@@ -402,23 +395,23 @@ ZEROEND
 ;-----------------------------------------------------------------------		
 ; AROUND DiSK INTerface
 
-AROUND	lda DCMND
+AROUND		lda DCMND
 		cmp #$52
 		beq SECREAD
 		jsr DSKINTO
 		jmp $0100+BACK-ZEROCP
 ;.......................................................................		
-SECREAD	lda DAUX1
+SECREAD		lda DAUX1
 		cmp #$00
 		bne NOCORR1
 		dec DAUX2
-NOCORR1	dec DAUX1
+NOCORR1		dec DAUX1
 		lda	DAUX1
 		and #$01
 		cmp #$01
 		bne NOHALF
 		lda #$80
-NOHALF	sta TMP
+NOHALF		sta TMP
 		lda DAUX1
 		lsr
 		and #$1F
@@ -443,7 +436,7 @@ NOHALF	sta TMP
 		cmp #$FF
 		bne NOCORR2
 		inc DAUX2
-NOCORR2 inc DAUX1				
+NOCORR2 	inc DAUX1				
 		lda DBUFA
 		sta TMP+2
 		lda DBUFA+1
