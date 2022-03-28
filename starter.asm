@@ -286,7 +286,7 @@ SECREAD		lda DAUX1
 		bne NOCORR1
 		dec DAUX2
 NOCORR1		dec DAUX1
-		lda	DAUX1
+		lda DAUX1
 		and #$01
 		cmp #$01
 		bne NOHALF
@@ -298,7 +298,7 @@ NOHALF		sta TMP
 		clc
 		adc #$80
 		sta TMP+1	
-		lda	DAUX2
+		lda DAUX2
 		asl
 		asl
 		and #$7F
@@ -406,7 +406,7 @@ SECREAD		lda DAUX1
 		bne NOCORR1
 		dec DAUX2
 NOCORR1		dec DAUX1
-		lda	DAUX1
+		lda DAUX1
 		and #$01
 		cmp #$01
 		bne NOHALF
@@ -418,7 +418,7 @@ NOHALF		sta TMP
 		clc
 		adc #$80
 		sta TMP+1	
-		lda	DAUX2
+		lda DAUX2
 		asl
 		asl
 		and #$7F
