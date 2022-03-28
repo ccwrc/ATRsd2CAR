@@ -4,4 +4,4 @@
 ./build
 
 gcc -Wall -o atrsd2car atrsd2car.c
-./atrsd2car SilentService.atr SilentService.car -c
+./atrsd2car test.atr test.car -c
