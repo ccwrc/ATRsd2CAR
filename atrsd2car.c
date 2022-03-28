@@ -31,7 +31,7 @@ U8 loadATR(const char *filename, U8 *data)
 	FILE *pf;
 	pf=fopen(filename,"rb");
 	if (pf)
-    	{
+    {
 		i=fread(header,sizeof(U8),16,pf);
 		if (i==16)
 		{
@@ -65,16 +65,20 @@ U8 loadATR(const char *filename, U8 *data)
 	return ret;
 }
 /*--------------------------------------------------------------------*/
-U8 saveCAR(const char *filename, U8 *data)
+U8 saveCAR(const char *filename, U8 *data, unsigned int sum)
 {
-	U8 header[16]={	0x43, 0x41, 0x52, 0x54, 0x00, 0x00, 0x00, 0x23,
-		       	0x01, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	U8 header[16]={0x43, 0x41, 0x52, 0x54, 0x00, 0x00, 0x00, 0x23,
+		           0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00};
 	U8 ret=0;
 	int i;
 	FILE *pf;
+	header[8]=((sum>>24)&0xFF);
+	header[9]=((sum>>16)&0xFF);
+	header[10]=((sum>>8)&0xFF);
+	header[11]=(sum&0xFF);
 	pf=fopen(filename,"wb");
 	if (pf)
-    	{
+    {
 		i=fwrite(header,sizeof(U8),16,pf);
 		if (i==16)
 		{
@@ -88,9 +92,9 @@ U8 saveCAR(const char *filename, U8 *data)
 	return ret;
 }
 /*--------------------------------------------------------------------*/
-void buildCar(const U8 *loader, const U8 *atrdata, U8 *cardata)
+unsigned int buildCar(const U8 *loader, const U8 *atrdata, U8 *cardata)
 {
-	unsigned int i;
+	unsigned int i,sum=0;;
 	for (i=0; i<CARSIZE; i++)
 	{
 		cardata[i]=0xFF;
@@ -103,6 +107,11 @@ void buildCar(const U8 *loader, const U8 *atrdata, U8 *cardata)
 	{
 		cardata[CARSIZE-LDRSIZE+i]=loader[i];
 	};
+	for (i=0; i<CARSIZE; i++)
+	{
+		sum+=cardata[i];
+	};
+	return sum;
 }
 /*--------------------------------------------------------------------*/
 void first(U8 mode, U8 *atrdata, unsigned int i)
@@ -164,14 +173,15 @@ void checkJDSKINT(U8 *atrdata, U8 mode)
 /*--------------------------------------------------------------------*/
 void atrsd2car(const char *atrfn, const char *carfn, U8 mode)
 {
+	unsigned int sum;
 	U8 atrdata[ATRSIZE];
 	U8 cardata[CARSIZE];
 	if (loadATR(atrfn,atrdata))
 	{
 		printf("Load \"%s\"\n",atrfn);
 		checkJDSKINT(atrdata,mode);
-		buildCar(starter,atrdata,cardata);
-		if (saveCAR(carfn,cardata))
+		sum=buildCar(starter,atrdata,cardata);
+		if (saveCAR(carfn,cardata,sum))
 		{
 			printf("Save \"%s\"\n",carfn);
 		}
@@ -190,22 +200,22 @@ int main( int argc, char* argv[] )
 {	
 	printf("ATRsd2CAR - ver: %s\n",__DATE__);
 	if (argc==3)
-    	{
+    {
 		atrsd2car(argv[1],argv[2],0);
-    	}
-    	else if (argc==4)
-    	{
+    }
+    else if (argc==4)
+    {
 		char *ptr;
 		ptr=argv[3];
 		U8 mode=ptr[1];
 		atrsd2car(argv[1],argv[2],mode);
-    	}
-    	else
-    	{
+    }
+    else
+    {
 		printf("(c) GienekP\n");
 		printf("use:\natrsd2car game.atr game.car [-c]\n");
-    	};
-    	return 0;
+    };
+    return 0;
 }
 /*--------------------------------------------------------------------*/
 #include "starter.h"
