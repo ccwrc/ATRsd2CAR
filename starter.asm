@@ -158,7 +158,7 @@ LPCPY		lda (TMP),Y
 		;lda #$01
 		;sta JDSKINT+2
 		
-		lda RESETWM+2	; don't test cart exchange RESET
+		lda RESETWM+2		; don't test cart exchange RESET
 		sta RESETWM+5
 		lda RESETWM+3
 		sta RESETWM+6
@@ -274,7 +274,7 @@ SRTCPY
 .local DSKINT_new,$C6B3
 
 		nop
-		nop				; ONLY TRIM TO $C739
+		nop			; ONLY TRIM TO $C739
 		nop
 		lda DCMND
 		cmp #$52
