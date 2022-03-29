@@ -273,20 +273,13 @@ EXIT	ldy DSTATS
 SRTCPY
 .local DSKINT_new,$C6B3
 
-;		jmp $0100
 		nop
 		nop				; ONLY TRIM TO $C739
 		nop
 		lda DCMND
 		cmp #$52
 		beq SECREAD
-;		lda #$00
-;		sta $D500		
-;		jsr DSKINTO		; NO SPACE FOR THIS CODE :/
-;		lda #$FF
-;		sta $D500
 		clc
-;		bcc FINISH
 		bcc STATOK
 ;.......................................................................		
 SECREAD	lda DAUX1
