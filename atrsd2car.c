@@ -175,7 +175,20 @@ void checkJDSKINT(U8 *atrdata, U8 mode)
 				first(mode,atrdata,i);
 				printf(" JMP DSKINT ; 0x%06X 4C B3 C6 -> 4C 00 01\n",i+16);
 			};			
-		};	
+		};
+		if ((atrdata[i+1]==0x59) && (atrdata[i+2]==0xE4))
+		{
+			if (atrdata[i]==0x20)
+			{
+				first(mode,atrdata,i);
+				printf(" JSR JSIOINT ; 0x%06X 20 59 E4 -> 20 00 01\n",i+16);
+			};
+			if (atrdata[i]==0x4C)
+			{
+				first(mode,atrdata,i);
+				printf(" JMP JSIOINT ; 0x%06X 4C 59 E4 -> 4C 00 01\n",i+16);
+			};			
+		};		
 	};
 }
 /*--------------------------------------------------------------------*/
