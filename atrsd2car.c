@@ -42,7 +42,7 @@ U8 loadATR(const char *filename, U8 *data)
 			if (checkATR(header))
 			{
 				i=fread(data,sizeof(U8),ATRSIZE,pf);
-				if (i<ATRSIZE)
+				if (i<=ATRSIZE)
 				{
 					ret=1;
 				}
