@@ -123,6 +123,7 @@ T1		cmp #$00
 		bne L3
 		clc 
 		rts
+		
 ;-----------------------------------------------------------------------		
 ; SET RAM & DISABLE BASIC
 
@@ -133,6 +134,7 @@ SETRAM		lda PORTB
 		lda #$01
 		sta BASICF
 		rts
+		
 ;-----------------------------------------------------------------------		
 ; COPY NEW DSKINT PROCEDURE
 
@@ -169,6 +171,7 @@ LPCPY		lda (TMP),Y
 		sta WAIT+73	
 		
 		rts
+		
 ;-----------------------------------------------------------------------		
 ; COPY TO ZEROPAGE FOR "KILLERS" PORTB
 
@@ -190,6 +193,7 @@ RESCPY		lda (TMP),Y
 		sta (TMP+2),Y
 		
 		rts
+		
 ;-----------------------------------------------------------------------		
 ; LEAVE CART SPACE
 		
