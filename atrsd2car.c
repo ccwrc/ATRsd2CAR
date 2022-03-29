@@ -29,6 +29,10 @@ U8 loadATR(const char *filename, U8 *data)
 	U8 ret=0;
 	int i;
 	FILE *pf;
+	for (i=0; i<ATRSIZE; i++)
+	{
+		data[i]=0xFF;
+	};
 	pf=fopen(filename,"rb");
 	if (pf)
 	{
