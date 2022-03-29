@@ -16,7 +16,7 @@ extern U8 starter[LDRSIZE];
 U8 checkATR(const U8 *data)
 {
 	U8 ret=0;
-	if ((data[0]==0x96) && (data[1]==02) && (data[2]==0x80) && (data[4]==0x80))
+	if ((data[0]==0x96) && (data[1]==02) && (data[4]==0x80) && (data[5]==0x00))
 	{
 		ret=1;
 	};
@@ -31,14 +31,14 @@ U8 loadATR(const char *filename, U8 *data)
 	FILE *pf;
 	pf=fopen(filename,"rb");
 	if (pf)
-    	{
+	{
 		i=fread(header,sizeof(U8),16,pf);
 		if (i==16)
 		{
 			if (checkATR(header))
 			{
 				i=fread(data,sizeof(U8),ATRSIZE,pf);
-				if (i==ATRSIZE)
+				if (i<ATRSIZE)
 				{
 					ret=1;
 				}
@@ -78,7 +78,7 @@ U8 saveCAR(const char *filename, U8 *data, unsigned int sum)
 	header[11]=(sum&0xFF);
 	pf=fopen(filename,"wb");
 	if (pf)
-    	{
+	{
 		i=fwrite(header,sizeof(U8),16,pf);
 		if (i==16)
 		{
@@ -200,22 +200,22 @@ int main( int argc, char* argv[] )
 {	
 	printf("ATRsd2CAR - ver: %s\n",__DATE__);
 	if (argc==3)
-    	{
+	{
 		atrsd2car(argv[1],argv[2],0);
-    	}
-    	else if (argc==4)
-    	{
+	}
+	else if (argc==4)
+	{
 		char *ptr;
 		ptr=argv[3];
 		U8 mode=ptr[1];
 		atrsd2car(argv[1],argv[2],mode);
-    	}
-    	else
-    	{
+	}
+	else
+	{
 		printf("(c) GienekP\n");
 		printf("use:\natrsd2car game.atr game.car [-c]\n");
-    	};
-    return 0;
+	};
+	return 0;
 }
 /*--------------------------------------------------------------------*/
 #include "starter.h"
