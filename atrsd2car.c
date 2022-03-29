@@ -7,11 +7,11 @@
 /*--------------------------------------------------------------------*/
 typedef unsigned char U8;
 /*--------------------------------------------------------------------*/
-#define ATRSIZE (720*128)
+#define ATRSIZE ((720+239)*128)
 #define CARSIZE (128*1024)
 #define LDRSIZE (8*1024)
 /*--------------------------------------------------------------------*/
-extern U8 starter[LDRSIZE];
+#include "starter.h"
 /*--------------------------------------------------------------------*/
 U8 checkATR(const U8 *data)
 {
@@ -96,20 +96,24 @@ U8 saveCAR(const char *filename, U8 *data, unsigned int sum)
 	return ret;
 }
 /*--------------------------------------------------------------------*/
-unsigned int buildCar(const U8 *loader, const U8 *atrdata, U8 *cardata)
+unsigned int buildCar(const U8 *loader, unsigned int stsize, const U8 *atrdata, U8 *cardata)
 {
-	unsigned int i,sum=0;;
+	unsigned int i,sum=0,toend=stsize;
 	for (i=0; i<CARSIZE; i++)
 	{
 		cardata[i]=0xFF;
 	};
 	for (i=0; i<ATRSIZE; i++)
 	{
-		cardata[i]=atrdata[i];
+		cardata[i+128]=atrdata[i];
 	};
-	for (i=0; i<LDRSIZE; i++)
+	if (toend>LDRSIZE)
 	{
-		cardata[CARSIZE-LDRSIZE+i]=loader[i];
+		toend=LDRSIZE;
+	};
+	for (i=0; i<toend; i++)
+	{
+		cardata[CARSIZE-toend+i]=loader[stsize-toend+i];
 	};
 	for (i=0; i<CARSIZE; i++)
 	{
@@ -184,7 +188,7 @@ void atrsd2car(const char *atrfn, const char *carfn, U8 mode)
 	{
 		printf("Load \"%s\"\n",atrfn);
 		checkJDSKINT(atrdata,mode);
-		sum=buildCar(starter,atrdata,cardata);
+		sum=buildCar(starter_bin,starter_bin_len,atrdata,cardata);
 		if (saveCAR(carfn,cardata,sum))
 		{
 			printf("Save \"%s\"\n",carfn);
@@ -221,6 +225,4 @@ int main( int argc, char* argv[] )
 	};
 	return 0;
 }
-/*--------------------------------------------------------------------*/
-#include "starter.h"
 /*--------------------------------------------------------------------*/
