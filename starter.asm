@@ -388,7 +388,8 @@ GOBOOT		lda #$FF	; $013E
 		sta $D500
 		lda TRIG3
 		sta GINTLK
-		jmp BOOT
+		jsr BOOT
+		jmp RESETWM
 		
 ZEROEND
 
