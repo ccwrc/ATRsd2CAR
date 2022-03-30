@@ -322,7 +322,7 @@ NOHALF		sta TMP
 		clc
 		adc #$80
 		sta TMP+1	
-		lda	DAUX2
+		lda DAUX2
 		asl
 		asl
 		and #$7F
