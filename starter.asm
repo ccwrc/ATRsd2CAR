@@ -52,12 +52,12 @@ JSIOINT = $E459
 ;-----------------------------------------------------------------------		
 ; INITCART ROUTINE
 
-INIT	rts
+INIT		rts
 	
 ;-----------------------------------------------------------------------		
 ; CARTRUN ROUTINE
 	
-BEGIN	jsr IRQDIS
+BEGIN		jsr IRQDIS
 		jsr ROM2RAM
 		jsr SETRAM
 		jsr OVRDINT
@@ -69,7 +69,7 @@ BEGIN	jsr IRQDIS
 ;-----------------------------------------------------------------------		
 ; IRQ ENABLE
 
-IRQENB	lda #$40
+IRQENB		lda #$40
 		sta NMIEN
 		lda #$F7
 		sta IRQST
@@ -81,7 +81,7 @@ IRQENB	lda #$40
 ;-----------------------------------------------------------------------		
 ; IRQ DISABLE
 
-IRQDIS	sei	
+IRQDIS		sei	
 		lda #$00
 		sta DMACTL
 		sta NMIEN
@@ -92,7 +92,7 @@ IRQDIS	sei
 ;-----------------------------------------------------------------------		
 ; COPY ROM TO RAM
 	
-ROM2RAM	lda #$C0
+ROM2RAM		lda #$C0
 		sta TMP+1
 		ldy #$00
 		sty TMP
@@ -124,7 +124,7 @@ T1		cmp #$00
 ;-----------------------------------------------------------------------		
 ; SET RAM & DISABLE BASIC
 
-SETRAM	lda PORTB
+SETRAM		lda PORTB
 		and #$FE
 		ora #$02
 		sta PORTB
@@ -135,7 +135,7 @@ SETRAM	lda PORTB
 ;-----------------------------------------------------------------------		
 ; COPY NEW SIOINT PROCEDURE
 
-OVRDINT	lda #<SIOCPY
+OVRDINT		lda #<SIOCPY
 		sta TMP
 		lda #>SIOCPY
 		sta TMP+1
@@ -145,7 +145,7 @@ OVRDINT	lda #<SIOCPY
 		sta TMP+3
 			
 		ldy #ENDCPY-SIOCPY-1
-LPCPY	lda (TMP),Y
+LPCPY		lda (TMP),Y
 		sta (TMP+2),Y
 		dey
 		bne LPCPY
@@ -167,7 +167,7 @@ LPCPY	lda (TMP),Y
 ;-----------------------------------------------------------------------		
 ; COPY TO $RAMPROC FOR "KILLERS" PORTB
 
-RESERVE	lda #<ZEROCP
+RESERVE		lda #<ZEROCP
 		sta TMP
 		lda #>ZEROCP
 		sta TMP+1
@@ -176,7 +176,7 @@ RESERVE	lda #<ZEROCP
 		lda #>RAMPROC
 		sta TMP+3		
 		ldy #ZEROEND-ZEROCP-1
-RESCPY	lda (TMP),Y
+RESCPY		lda (TMP),Y
 		sta (TMP+2),Y
 		dey
 		bne RESCPY
@@ -187,7 +187,7 @@ RESCPY	lda (TMP),Y
 ;-----------------------------------------------------------------------		
 ; FINAL VALUES
 
-FINAL 	lda #$1F
+FINAL 		lda #$1F
 		sta MEMTOP
 		lda #$BC
 		sta MEMTOP+1
@@ -195,21 +195,21 @@ FINAL 	lda #$1F
 		sta RAMTOP
 		lda #$01
 		sta PDVMSK
-VCL1	lda VCOUNT
+VCL1		lda VCOUNT
 		cmp #$3
 		bne VCL1
-TSTMAX	lda VCOUNT
+TSTMAX		lda VCOUNT
 		cmp #$8D
 		bne VCL2
 		sta RAMPROC+4
-VCL2	cmp #$00
+VCL2		cmp #$00
 		bne TSTMAX
 		rts
 		
 ;-----------------------------------------------------------------------		
 ; LEAVE CART SPACE
 		
-BYEBYE	jmp RAMPROC+GOBOOT-ZEROCP
+BYEBYE		jmp RAMPROC+GOBOOT-ZEROCP
 
 ;-----------------------------------------------------------------------		
 ; SIO INTerface
@@ -234,7 +234,7 @@ SIO     = $E971
 		lda PDVMSK
 		beq FOUND
 		ldx #$08
-NEXT 	jsr RAMPROC	; jsr GETLOW
+NEXT 		jsr RAMPROC	; jsr GETLOW
 		beq END 	; beq FOUND
 		txa
 		pha
@@ -246,8 +246,8 @@ NEXT 	jsr RAMPROC	; jsr GETLOW
 		sta PDVRS
 		sta PDVREG
 		beq END
-FOUND 	jsr SIO
-END 	pla
+FOUND 		jsr SIO
+END 		pla
 		sta DUNIT
 		lda #$00
 		sta CRITIC
@@ -261,7 +261,7 @@ ENDCPY	; --->>> $C96D
 ;-----------------------------------------------------------------------		
 ; RELOC CODE FOR RAMPROC
 
-ZEROCP	lda VCOUNT
+ZEROCP		lda VCOUNT
 		cmp #$70		; $70->NTSC $8D->PAL
 		bne ZEROCP		
 		ldy #$00
@@ -270,7 +270,7 @@ ZEROCP	lda VCOUNT
 		
 		; --->>>CART<<<---
 
-CPYSEC	lda #$FF	; $010F
+CPYSEC		lda #$FF	; $010F
 		sta $D500
 		lda (TMP),Y
 		stx $D500
@@ -282,13 +282,13 @@ CPYSEC	lda #$FF	; $010F
 		ldy #$01
 		sty DSTATS	
 				
-BACK	lda #$FF	; $0125
+BACK		lda #$FF	; $0125
 		sta $D500
 		lda TRIG3
 		sta GINTLK
 		rts
 		
-GOBOOT	lda #$FF	; $0131
+GOBOOT		lda #$FF	; $0131
 		sta $D500
 		lda TRIG3
 		sta GINTLK
@@ -300,7 +300,7 @@ ZEROEND
 ;-----------------------------------------------------------------------		
 ; AROUND SIO INTerface
 
-AROUND	lda DCMND
+AROUND		lda DCMND
 		cmp #$52
 		beq SECREAD
 		cmp #$57
@@ -309,15 +309,15 @@ AROUND	lda DCMND
 		beq STATOK
 		cmp #$53
 		bne UNKWCMD
-STATOK	ldy #$01
+STATOK		ldy #$01
 		sty DSTATS
-UNKWCMD	jmp RAMPROC+BACK-ZEROCP
-SECREAD	lda	DAUX1
+UNKWCMD		jmp RAMPROC+BACK-ZEROCP
+SECREAD		lda	DAUX1
 		and #$01
 		cmp #$01
 		bne NOHALF
 		lda #$80
-NOHALF	sta TMP
+NOHALF		sta TMP
 		lda DAUX1
 		lsr
 		and #$1F
