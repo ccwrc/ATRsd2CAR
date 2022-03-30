@@ -107,7 +107,6 @@ L3		lda (TMP),Y
 		ora PORTB
 		sta PORTB
 		iny
-		cpy #0
 		bne L3
 NOK		inc TMP+1
 		clc
@@ -312,10 +311,9 @@ AROUND		lda DCMND
 STATOK		ldy #$01
 		sty DSTATS
 UNKWCMD		jmp RAMPROC+BACK-ZEROCP
-SECREAD		lda	DAUX1
+SECREAD		lda DAUX1
 		and #$01
-		cmp #$01
-		bne NOHALF
+		beq NOHALF
 		lda #$80
 NOHALF		sta TMP
 		lda DAUX1
